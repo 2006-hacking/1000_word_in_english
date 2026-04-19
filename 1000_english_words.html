@@ -1,0 +1,1223 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F7F4EF;
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+
+  .hero {
+    background: #1C1C2E;
+    color: white;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 span { color: #E8C547; }
+
+  .hero p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.8rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #E8C547;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .search-bar {
+    padding: 1.5rem 2rem;
+    background: white;
+    border-bottom: 1px solid #e8e4dd;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .search-bar input {
+    flex: 1;
+    border: 1.5px solid #e0dbd2;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    background: #F7F4EF;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-bar input:focus { border-color: #1C1C2E; }
+
+  .filter-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 1rem 2rem 0.5rem;
+    background: white;
+    border-bottom: 1px solid #e8e4dd;
+  }
+
+  .tab {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.18s;
+    background: #F7F4EF;
+    color: #555;
+  }
+
+  .tab:hover { border-color: #1C1C2E; color: #1C1C2E; }
+  .tab.active { background: #1C1C2E; color: white; }
+
+  .content { padding: 1.5rem 2rem 3rem; max-width: 1100px; margin: 0 auto; }
+
+  .category-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid;
+  }
+
+  .cat-emoji { font-size: 1.4rem; }
+
+  .category-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .word-count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    opacity: 0.8;
+  }
+
+  .words-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .word-card {
+    background: white;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    border: 1px solid #ede9e1;
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: default;
+  }
+
+  .word-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+  }
+
+  .word-english {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+
+  .word-french {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 6px;
+  }
+
+  .word-example {
+    font-size: 0.78rem;
+    color: #555;
+    font-style: italic;
+    line-height: 1.4;
+    border-left: 2px solid;
+    padding-left: 7px;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #999;
+    font-size: 1rem;
+  }
+
+  .hidden { display: none !important; }
+
+  /* Category colors */
+  .cat-greetings .category-header { border-color: #E8C547; }
+  .cat-greetings .cat-emoji, .cat-greetings .category-header h2 { color: #9a7c00; }
+  .cat-greetings .word-count { background: #FFF8D6; color: #9a7c00; }
+  .cat-greetings .word-example { border-color: #E8C547; }
+  .cat-greetings .word-english { color: #7a6000; }
+
+  .cat-numbers .category-header { border-color: #5B8AF5; }
+  .cat-numbers .cat-emoji, .cat-numbers .category-header h2 { color: #1a3fa8; }
+  .cat-numbers .word-count { background: #EBF0FF; color: #1a3fa8; }
+  .cat-numbers .word-example { border-color: #5B8AF5; }
+  .cat-numbers .word-english { color: #1a3fa8; }
+
+  .cat-colors .category-header { border-color: #E05FA0; }
+  .cat-colors .cat-emoji, .cat-colors .category-header h2 { color: #b0306e; }
+  .cat-colors .word-count { background: #FFE8F3; color: #b0306e; }
+  .cat-colors .word-example { border-color: #E05FA0; }
+  .cat-colors .word-english { color: #b0306e; }
+
+  .cat-body .category-header { border-color: #E87B5B; }
+  .cat-body .cat-emoji, .cat-body .category-header h2 { color: #a03a1a; }
+  .cat-body .word-count { background: #FFEEE8; color: #a03a1a; }
+  .cat-body .word-example { border-color: #E87B5B; }
+  .cat-body .word-english { color: #a03a1a; }
+
+  .cat-food .category-header { border-color: #5CC76E; }
+  .cat-food .cat-emoji, .cat-food .category-header h2 { color: #1e6e2e; }
+  .cat-food .word-count { background: #E8FBED; color: #1e6e2e; }
+  .cat-food .word-example { border-color: #5CC76E; }
+  .cat-food .word-english { color: #1e6e2e; }
+
+  .cat-family .category-header { border-color: #A57CF0; }
+  .cat-family .cat-emoji, .cat-family .category-header h2 { color: #5b2dba; }
+  .cat-family .word-count { background: #F3EEFF; color: #5b2dba; }
+  .cat-family .word-example { border-color: #A57CF0; }
+  .cat-family .word-english { color: #5b2dba; }
+
+  .cat-travel .category-header { border-color: #3BC9CF; }
+  .cat-travel .cat-emoji, .cat-travel .category-header h2 { color: #1a6d72; }
+  .cat-travel .word-count { background: #E3FBFC; color: #1a6d72; }
+  .cat-travel .word-example { border-color: #3BC9CF; }
+  .cat-travel .word-english { color: #1a6d72; }
+
+  .cat-time .category-header { border-color: #F5894A; }
+  .cat-time .cat-emoji, .cat-time .category-header h2 { color: #944500; }
+  .cat-time .word-count { background: #FFF0E4; color: #944500; }
+  .cat-time .word-example { border-color: #F5894A; }
+  .cat-time .word-english { color: #944500; }
+
+  .cat-verbs .category-header { border-color: #1C1C2E; }
+  .cat-verbs .cat-emoji, .cat-verbs .category-header h2 { color: #1C1C2E; }
+  .cat-verbs .word-count { background: #e8e8f0; color: #1C1C2E; }
+  .cat-verbs .word-example { border-color: #1C1C2E; }
+  .cat-verbs .word-english { color: #1C1C2E; }
+
+  .cat-adj .category-header { border-color: #E8525A; }
+  .cat-adj .cat-emoji, .cat-adj .category-header h2 { color: #991420; }
+  .cat-adj .word-count { background: #FFE8EA; color: #991420; }
+  .cat-adj .word-example { border-color: #E8525A; }
+  .cat-adj .word-english { color: #991420; }
+
+  .cat-house .category-header { border-color: #8B6F47; }
+  .cat-house .cat-emoji, .cat-house .category-header h2 { color: #5a3e1b; }
+  .cat-house .word-count { background: #F5EEE4; color: #5a3e1b; }
+  .cat-house .word-example { border-color: #8B6F47; }
+  .cat-house .word-english { color: #5a3e1b; }
+
+  .cat-nature .category-header { border-color: #69B94A; }
+  .cat-nature .cat-emoji, .cat-nature .category-header h2 { color: #2a6415; }
+  .cat-nature .word-count { background: #EDFAD7; color: #2a6415; }
+  .cat-nature .word-example { border-color: #69B94A; }
+  .cat-nature .word-english { color: #2a6415; }
+
+  .cat-clothes .category-header { border-color: #C06BC0; }
+  .cat-clothes .cat-emoji, .cat-clothes .category-header h2 { color: #722072; }
+  .cat-clothes .word-count { background: #F7E8F7; color: #722072; }
+  .cat-clothes .word-example { border-color: #C06BC0; }
+  .cat-clothes .word-english { color: #722072; }
+
+  .cat-health .category-header { border-color: #E0494B; }
+  .cat-health .cat-emoji, .cat-health .category-header h2 { color: #8c1012; }
+  .cat-health .word-count { background: #FFE8E8; color: #8c1012; }
+  .cat-health .word-example { border-color: #E0494B; }
+  .cat-health .word-english { color: #8c1012; }
+
+  .cat-work .category-header { border-color: #4A7FA5; }
+  .cat-work .cat-emoji, .cat-work .category-header h2 { color: #1a4060; }
+  .cat-work .word-count { background: #E4F0FA; color: #1a4060; }
+  .cat-work .word-example { border-color: #4A7FA5; }
+  .cat-work .word-english { color: #1a4060; }
+
+  .cat-question .category-header { border-color: #F5C842; }
+  .cat-question .cat-emoji, .cat-question .category-header h2 { color: #7a5a00; }
+  .cat-question .word-count { background: #FFF8DC; color: #7a5a00; }
+  .cat-question .word-example { border-color: #F5C842; }
+  .cat-question .word-english { color: #7a5a00; }
+
+  .cat-prepositions .category-header { border-color: #90A0B0; }
+  .cat-prepositions .cat-emoji, .cat-prepositions .category-header h2 { color: #34505e; }
+  .cat-prepositions .word-count { background: #EAF0F5; color: #34505e; }
+  .cat-prepositions .word-example { border-color: #90A0B0; }
+  .cat-prepositions .word-english { color: #34505e; }
+
+  .footer {
+    text-align: center;
+    padding: 1.5rem;
+    background: #1C1C2E;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.8rem;
+  }
+</style>
+
+<div class="hero">
+  <h1>1000 <span>Essential</span> English Words</h1>
+  <p>Les mots fondamentaux pour commencer à parler anglais, classés par catégorie</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">1000</div><div class="stat-label">Mots</div></div>
+    <div class="stat"><div class="stat-num">17</div><div class="stat-label">Catégories</div></div>
+    <div class="stat"><div class="stat-num">1000</div><div class="stat-label">Exemples</div></div>
+  </div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Rechercher un mot en anglais ou en français...">
+</div>
+
+<div class="filter-tabs" id="filterTabs">
+  <span class="tab active" data-cat="all">Tout voir</span>
+</div>
+
+<div class="content" id="mainContent"></div>
+
+<div class="footer">1000 mots essentiels pour débuter en anglais</div>
+
+<script>
+const categories = [
+  {
+    id: 'greetings',
+    name: 'Salutations & Politesse',
+    emoji: '👋',
+    words: [
+      {en:'hello',fr:'bonjour',ex:'Hello! How are you?'},
+      {en:'hi',fr:'salut',ex:'Hi there! Nice to meet you.'},
+      {en:'goodbye',fr:'au revoir',ex:'Goodbye! See you tomorrow.'},
+      {en:'bye',fr:'salut (départ)',ex:'Bye! Take care.'},
+      {en:'please',fr:'s\'il vous plaît',ex:'Can I have water, please?'},
+      {en:'thank you',fr:'merci',ex:'Thank you very much!'},
+      {en:'thanks',fr:'merci (inform.)',ex:'Thanks for your help!'},
+      {en:'sorry',fr:'désolé',ex:'I\'m sorry for being late.'},
+      {en:'excuse me',fr:'excusez-moi',ex:'Excuse me, where is the station?'},
+      {en:'welcome',fr:'bienvenue',ex:'Welcome to our home!'},
+      {en:'good morning',fr:'bonjour (matin)',ex:'Good morning! Did you sleep well?'},
+      {en:'good afternoon',fr:'bon après-midi',ex:'Good afternoon, how can I help?'},
+      {en:'good evening',fr:'bonsoir',ex:'Good evening, nice to see you.'},
+      {en:'good night',fr:'bonne nuit',ex:'Good night, sweet dreams.'},
+      {en:'yes',fr:'oui',ex:'Yes, I understand.'},
+      {en:'no',fr:'non',ex:'No, thank you.'},
+      {en:'ok',fr:'d\'accord',ex:'Ok, let\'s do it.'},
+      {en:'sure',fr:'bien sûr',ex:'Sure, no problem!'},
+      {en:'of course',fr:'bien entendu',ex:'Of course, I can help you.'},
+      {en:'nice to meet you',fr:'ravi de vous rencontrer',ex:'Nice to meet you, I\'m John.'},
+      {en:'how are you?',fr:'comment allez-vous?',ex:'Hi! How are you today?'},
+      {en:'fine',fr:'bien',ex:'I\'m fine, thank you.'},
+      {en:'great',fr:'super',ex:'That\'s great news!'},
+      {en:'not bad',fr:'pas mal',ex:'How are you? — Not bad!'},
+      {en:'see you soon',fr:'à bientôt',ex:'Ok, see you soon!'},
+      {en:'take care',fr:'prenez soin de vous',ex:'Take care, bye!'},
+      {en:'cheers',fr:'santé / merci (brit.)',ex:'Cheers! Enjoy your drink.'},
+      {en:'my name is',fr:'je m\'appelle',ex:'My name is Maria.'},
+      {en:'I\'m from',fr:'je viens de',ex:'I\'m from France.'},
+      {en:'pardon',fr:'pardon?',ex:'Pardon? Can you repeat that?'},
+      {en:'what?',fr:'quoi?',ex:'What? I didn\'t hear you.'},
+      {en:'really?',fr:'vraiment?',ex:'Really? That\'s amazing!'},
+      {en:'I see',fr:'je vois',ex:'I see, that makes sense.'},
+      {en:'right',fr:'c\'est ça',ex:'Right, I agree with you.'},
+      {en:'of course not',fr:'bien sûr que non',ex:'Of course not, that\'s impossible!'},
+      {en:'definitely',fr:'absolument',ex:'Definitely! Count me in.'},
+      {en:'exactly',fr:'exactement',ex:'Exactly, that\'s what I meant.'},
+      {en:'I agree',fr:'je suis d\'accord',ex:'I agree with your idea.'},
+      {en:'I disagree',fr:'je ne suis pas d\'accord',ex:'I disagree, let me explain.'},
+      {en:'maybe',fr:'peut-être',ex:'Maybe we can meet tomorrow.'},
+      {en:'I don\'t know',fr:'je ne sais pas',ex:'I don\'t know the answer.'},
+      {en:'I understand',fr:'je comprends',ex:'I understand the situation.'},
+      {en:'no problem',fr:'pas de problème',ex:'No problem, I\'ll do it.'},
+      {en:'you\'re welcome',fr:'de rien',ex:'You\'re welcome! Anytime.'},
+      {en:'congratulations',fr:'félicitations',ex:'Congratulations on your new job!'},
+      {en:'good luck',fr:'bonne chance',ex:'Good luck with your exam!'},
+      {en:'happy birthday',fr:'joyeux anniversaire',ex:'Happy birthday! Here\'s your gift.'},
+      {en:'help',fr:'aide / au secours',ex:'Help! I need assistance.'},
+      {en:'wait',fr:'attendez',ex:'Wait, I\'ll be right back.'},
+      {en:'stop',fr:'arrêtez',ex:'Stop! That\'s dangerous.'},
+    ]
+  },
+  {
+    id: 'question',
+    name: 'Mots Interrogatifs',
+    emoji: '❓',
+    words: [
+      {en:'who',fr:'qui',ex:'Who is your teacher?'},
+      {en:'what',fr:'quoi / que',ex:'What is your name?'},
+      {en:'where',fr:'où',ex:'Where do you live?'},
+      {en:'when',fr:'quand',ex:'When is the meeting?'},
+      {en:'why',fr:'pourquoi',ex:'Why are you sad?'},
+      {en:'how',fr:'comment',ex:'How do you say that?'},
+      {en:'which',fr:'lequel / quel',ex:'Which colour do you prefer?'},
+      {en:'whose',fr:'à qui',ex:'Whose bag is this?'},
+      {en:'how much',fr:'combien (indénombrable)',ex:'How much does it cost?'},
+      {en:'how many',fr:'combien (dénombrable)',ex:'How many apples do you want?'},
+      {en:'how long',fr:'combien de temps',ex:'How long is the film?'},
+      {en:'how far',fr:'à quelle distance',ex:'How far is the station?'},
+      {en:'how often',fr:'à quelle fréquence',ex:'How often do you exercise?'},
+      {en:'how old',fr:'quel âge',ex:'How old are you?'},
+    ]
+  },
+  {
+    id: 'numbers',
+    name: 'Nombres & Quantités',
+    emoji: '🔢',
+    words: [
+      {en:'one',fr:'un',ex:'I have one brother.'},
+      {en:'two',fr:'deux',ex:'Two coffees, please.'},
+      {en:'three',fr:'trois',ex:'She has three cats.'},
+      {en:'four',fr:'quatre',ex:'There are four seasons.'},
+      {en:'five',fr:'cinq',ex:'Five minutes, please.'},
+      {en:'six',fr:'six',ex:'I need six eggs.'},
+      {en:'seven',fr:'sept',ex:'There are seven days in a week.'},
+      {en:'eight',fr:'huit',ex:'The shop opens at eight.'},
+      {en:'nine',fr:'neuf',ex:'Nine students passed.'},
+      {en:'ten',fr:'dix',ex:'I\'ll be there in ten minutes.'},
+      {en:'eleven',fr:'onze',ex:'Eleven players in a team.'},
+      {en:'twelve',fr:'douze',ex:'There are twelve months.'},
+      {en:'twenty',fr:'vingt',ex:'Twenty people came.'},
+      {en:'thirty',fr:'trente',ex:'I\'m thirty years old.'},
+      {en:'forty',fr:'quarante',ex:'Forty percent agreed.'},
+      {en:'fifty',fr:'cinquante',ex:'Fifty dollars, please.'},
+      {en:'hundred',fr:'cent',ex:'A hundred kilometres away.'},
+      {en:'thousand',fr:'mille',ex:'A thousand people were there.'},
+      {en:'million',fr:'million',ex:'One million euros.'},
+      {en:'zero',fr:'zéro',ex:'The score is zero to one.'},
+      {en:'first',fr:'premier',ex:'She finished first.'},
+      {en:'second',fr:'deuxième',ex:'The second door on the left.'},
+      {en:'third',fr:'troisième',ex:'Third time lucky!'},
+      {en:'last',fr:'dernier',ex:'This is the last bus.'},
+      {en:'next',fr:'prochain',ex:'Next week I\'ll call you.'},
+      {en:'few',fr:'quelques',ex:'A few friends came.'},
+      {en:'many',fr:'beaucoup (plur.)',ex:'Many people love music.'},
+      {en:'much',fr:'beaucoup (sing.)',ex:'I don\'t have much time.'},
+      {en:'some',fr:'quelques / du',ex:'Can I have some water?'},
+      {en:'any',fr:'du / aucun',ex:'Do you have any questions?'},
+      {en:'all',fr:'tout',ex:'All students passed.'},
+      {en:'none',fr:'aucun',ex:'None of them agreed.'},
+      {en:'half',fr:'moitié',ex:'Half the class was absent.'},
+      {en:'both',fr:'les deux',ex:'Both options are good.'},
+      {en:'enough',fr:'assez',ex:'I have enough money.'},
+      {en:'more',fr:'plus',ex:'Can I have more?'},
+      {en:'less',fr:'moins',ex:'Use less sugar.'},
+      {en:'most',fr:'la plupart',ex:'Most people agree.'},
+      {en:'several',fr:'plusieurs',ex:'Several times a week.'},
+      {en:'each',fr:'chaque',ex:'Each student has a book.'},
+    ]
+  },
+  {
+    id: 'time',
+    name: 'Temps & Date',
+    emoji: '⏰',
+    words: [
+      {en:'today',fr:'aujourd\'hui',ex:'What are you doing today?'},
+      {en:'yesterday',fr:'hier',ex:'I was sick yesterday.'},
+      {en:'tomorrow',fr:'demain',ex:'See you tomorrow!'},
+      {en:'now',fr:'maintenant',ex:'I\'m busy now.'},
+      {en:'soon',fr:'bientôt',ex:'The bus arrives soon.'},
+      {en:'later',fr:'plus tard',ex:'Let\'s talk later.'},
+      {en:'before',fr:'avant',ex:'Wash your hands before eating.'},
+      {en:'after',fr:'après',ex:'Call me after lunch.'},
+      {en:'always',fr:'toujours',ex:'She always smiles.'},
+      {en:'never',fr:'jamais',ex:'I never eat meat.'},
+      {en:'sometimes',fr:'parfois',ex:'Sometimes I feel tired.'},
+      {en:'often',fr:'souvent',ex:'I often read at night.'},
+      {en:'usually',fr:'habituellement',ex:'I usually wake up at 7.'},
+      {en:'already',fr:'déjà',ex:'I\'ve already eaten.'},
+      {en:'still',fr:'encore / toujours',ex:'He\'s still sleeping.'},
+      {en:'yet',fr:'encore (négatif)',ex:'I haven\'t finished yet.'},
+      {en:'again',fr:'encore une fois',ex:'Say that again, please.'},
+      {en:'soon',fr:'bientôt',ex:'We\'ll meet soon.'},
+      {en:'morning',fr:'matin',ex:'I jog every morning.'},
+      {en:'afternoon',fr:'après-midi',ex:'See you this afternoon.'},
+      {en:'evening',fr:'soirée',ex:'A lovely evening.'},
+      {en:'night',fr:'nuit',ex:'I work at night.'},
+      {en:'week',fr:'semaine',ex:'Next week is busy.'},
+      {en:'month',fr:'mois',ex:'This month is March.'},
+      {en:'year',fr:'année',ex:'Happy New Year!'},
+      {en:'Monday',fr:'lundi',ex:'The meeting is on Monday.'},
+      {en:'Tuesday',fr:'mardi',ex:'She works on Tuesday.'},
+      {en:'Wednesday',fr:'mercredi',ex:'Wednesday is my day off.'},
+      {en:'Thursday',fr:'jeudi',ex:'See you Thursday.'},
+      {en:'Friday',fr:'vendredi',ex:'Friday is the last day.'},
+      {en:'Saturday',fr:'samedi',ex:'Let\'s go out on Saturday.'},
+      {en:'Sunday',fr:'dimanche',ex:'Rest on Sunday.'},
+      {en:'January',fr:'janvier',ex:'January is cold.'},
+      {en:'February',fr:'février',ex:'February is short.'},
+      {en:'March',fr:'mars',ex:'Spring starts in March.'},
+      {en:'April',fr:'avril',ex:'April showers bring flowers.'},
+      {en:'May',fr:'mai',ex:'Holidays in May!'},
+      {en:'June',fr:'juin',ex:'Summer begins in June.'},
+      {en:'July',fr:'juillet',ex:'July is hot.'},
+      {en:'August',fr:'août',ex:'We go camping in August.'},
+      {en:'September',fr:'septembre',ex:'School starts in September.'},
+      {en:'October',fr:'octobre',ex:'Halloween is in October.'},
+      {en:'November',fr:'novembre',ex:'November is rainy.'},
+      {en:'December',fr:'décembre',ex:'Christmas is in December.'},
+      {en:'hour',fr:'heure',ex:'Wait one hour.'},
+      {en:'minute',fr:'minute',ex:'Just a minute!'},
+      {en:'second',fr:'seconde',ex:'One second, please.'},
+      {en:'early',fr:'tôt',ex:'She arrives early.'},
+      {en:'late',fr:'tard / en retard',ex:'The train is late.'},
+      {en:'on time',fr:'à l\'heure',ex:'Please be on time.'},
+    ]
+  },
+  {
+    id: 'verbs',
+    name: 'Verbes Essentiels',
+    emoji: '⚡',
+    words: [
+      {en:'be',fr:'être',ex:'I am happy.'},
+      {en:'have',fr:'avoir',ex:'I have a dog.'},
+      {en:'do',fr:'faire',ex:'What do you do?'},
+      {en:'say',fr:'dire',ex:'What did he say?'},
+      {en:'go',fr:'aller',ex:'Let\'s go to the park.'},
+      {en:'get',fr:'obtenir / aller',ex:'Get some rest.'},
+      {en:'make',fr:'faire / créer',ex:'Make a coffee, please.'},
+      {en:'know',fr:'savoir / connaître',ex:'Do you know her?'},
+      {en:'think',fr:'penser',ex:'I think it\'s good.'},
+      {en:'take',fr:'prendre',ex:'Take an umbrella.'},
+      {en:'see',fr:'voir',ex:'I can see the mountains.'},
+      {en:'come',fr:'venir',ex:'Come here, please.'},
+      {en:'want',fr:'vouloir',ex:'I want a coffee.'},
+      {en:'look',fr:'regarder',ex:'Look at this!'},
+      {en:'use',fr:'utiliser',ex:'Use a dictionary.'},
+      {en:'find',fr:'trouver',ex:'I can\'t find my keys.'},
+      {en:'give',fr:'donner',ex:'Give me the book.'},
+      {en:'tell',fr:'dire / raconter',ex:'Tell me the truth.'},
+      {en:'work',fr:'travailler',ex:'I work from home.'},
+      {en:'call',fr:'appeler',ex:'Call me tonight.'},
+      {en:'try',fr:'essayer',ex:'Try this food!'},
+      {en:'ask',fr:'demander',ex:'Ask your teacher.'},
+      {en:'need',fr:'avoir besoin',ex:'I need help.'},
+      {en:'feel',fr:'ressentir / sentir',ex:'I feel tired today.'},
+      {en:'become',fr:'devenir',ex:'He became a doctor.'},
+      {en:'leave',fr:'partir / laisser',ex:'I leave at 8 am.'},
+      {en:'put',fr:'mettre',ex:'Put it on the table.'},
+      {en:'mean',fr:'signifier',ex:'What does this mean?'},
+      {en:'keep',fr:'garder / continuer',ex:'Keep going!'},
+      {en:'let',fr:'laisser / permettre',ex:'Let me help you.'},
+      {en:'begin',fr:'commencer',ex:'Let\'s begin the class.'},
+      {en:'show',fr:'montrer',ex:'Show me your work.'},
+      {en:'hear',fr:'entendre',ex:'I can\'t hear you.'},
+      {en:'play',fr:'jouer',ex:'Do you play guitar?'},
+      {en:'run',fr:'courir',ex:'I run every day.'},
+      {en:'move',fr:'bouger / déménager',ex:'Move to the right.'},
+      {en:'live',fr:'vivre / habiter',ex:'I live in Paris.'},
+      {en:'believe',fr:'croire',ex:'I believe you.'},
+      {en:'hold',fr:'tenir',ex:'Hold the door!'},
+      {en:'bring',fr:'apporter',ex:'Bring your passport.'},
+      {en:'happen',fr:'se passer',ex:'What happened?'},
+      {en:'write',fr:'écrire',ex:'Write your name here.'},
+      {en:'provide',fr:'fournir',ex:'Can you provide help?'},
+      {en:'sit',fr:'s\'asseoir',ex:'Sit down, please.'},
+      {en:'stand',fr:'se lever / se tenir',ex:'Stand up straight.'},
+      {en:'lose',fr:'perdre',ex:'Don\'t lose your ticket.'},
+      {en:'pay',fr:'payer',ex:'How do you want to pay?'},
+      {en:'meet',fr:'rencontrer',ex:'Nice to meet you.'},
+      {en:'include',fr:'inclure',ex:'The price includes tax.'},
+      {en:'eat',fr:'manger',ex:'Let\'s eat together.'},
+      {en:'drink',fr:'boire',ex:'Drink more water.'},
+      {en:'sleep',fr:'dormir',ex:'I need to sleep.'},
+      {en:'buy',fr:'acheter',ex:'I want to buy this.'},
+      {en:'open',fr:'ouvrir',ex:'Open the window.'},
+      {en:'close',fr:'fermer',ex:'Close the door.'},
+      {en:'read',fr:'lire',ex:'I read every night.'},
+      {en:'speak',fr:'parler',ex:'Do you speak French?'},
+      {en:'listen',fr:'écouter',ex:'Listen carefully.'},
+      {en:'wait',fr:'attendre',ex:'Wait for me!'},
+      {en:'help',fr:'aider',ex:'Can you help me?'},
+      {en:'learn',fr:'apprendre',ex:'Learn new words daily.'},
+      {en:'teach',fr:'enseigner',ex:'She teaches maths.'},
+      {en:'start',fr:'commencer',ex:'Let\'s start now.'},
+      {en:'stop',fr:'arrêter',ex:'Stop talking, please.'},
+      {en:'love',fr:'aimer (fort)',ex:'I love chocolate.'},
+      {en:'like',fr:'aimer (modéré)',ex:'I like swimming.'},
+      {en:'hate',fr:'détester',ex:'I hate waiting.'},
+      {en:'remember',fr:'se souvenir',ex:'Remember to call me.'},
+      {en:'forget',fr:'oublier',ex:'Don\'t forget your keys.'},
+      {en:'understand',fr:'comprendre',ex:'Do you understand?'},
+      {en:'explain',fr:'expliquer',ex:'Can you explain this?'},
+      {en:'choose',fr:'choisir',ex:'Choose your seat.'},
+      {en:'change',fr:'changer',ex:'Change your password.'},
+      {en:'travel',fr:'voyager',ex:'I love to travel.'},
+      {en:'visit',fr:'visiter / rendre visite',ex:'Visit me soon.'},
+      {en:'arrive',fr:'arriver',ex:'We arrive at noon.'},
+      {en:'leave',fr:'partir',ex:'We leave tomorrow.'},
+      {en:'return',fr:'retourner',ex:'I\'ll return next week.'},
+      {en:'walk',fr:'marcher',ex:'Let\'s walk to the park.'},
+      {en:'drive',fr:'conduire',ex:'I drive to work.'},
+      {en:'fly',fr:'voler',ex:'We fly to London.'},
+      {en:'cook',fr:'cuisiner',ex:'I cook every Sunday.'},
+      {en:'clean',fr:'nettoyer',ex:'Clean your room.'},
+      {en:'fix',fr:'réparer',ex:'Can you fix this?'},
+      {en:'build',fr:'construire',ex:'Build your future.'},
+      {en:'send',fr:'envoyer',ex:'Send me an email.'},
+      {en:'receive',fr:'recevoir',ex:'Did you receive my message?'},
+      {en:'share',fr:'partager',ex:'Share this with others.'},
+      {en:'check',fr:'vérifier',ex:'Check your emails.'},
+      {en:'plan',fr:'planifier',ex:'Let\'s plan the trip.'},
+      {en:'order',fr:'commander',ex:'Can I order, please?'},
+      {en:'pay',fr:'payer',ex:'I need to pay the bill.'},
+      {en:'save',fr:'économiser / sauvegarder',ex:'Save your work!'},
+      {en:'spend',fr:'dépenser / passer (temps)',ex:'Spend time with family.'},
+      {en:'enjoy',fr:'apprécier / profiter',ex:'Enjoy your meal!'},
+      {en:'celebrate',fr:'fêter',ex:'Let\'s celebrate!'},
+      {en:'relax',fr:'se détendre',ex:'Relax, it\'s fine.'},
+      {en:'exercise',fr:'faire de l\'exercice',ex:'Exercise every day.'},
+      {en:'practice',fr:'pratiquer',ex:'Practice makes perfect.'},
+    ]
+  },
+  {
+    id: 'adj',
+    name: 'Adjectifs & Descriptions',
+    emoji: '✨',
+    words: [
+      {en:'good',fr:'bon / bien',ex:'That\'s a good idea.'},
+      {en:'bad',fr:'mauvais',ex:'It was a bad decision.'},
+      {en:'big',fr:'grand',ex:'It\'s a big house.'},
+      {en:'small',fr:'petit',ex:'A small cup, please.'},
+      {en:'new',fr:'nouveau / neuf',ex:'I have a new phone.'},
+      {en:'old',fr:'vieux / âgé',ex:'This is an old book.'},
+      {en:'young',fr:'jeune',ex:'She is very young.'},
+      {en:'hot',fr:'chaud',ex:'It\'s hot today.'},
+      {en:'cold',fr:'froid',ex:'The water is cold.'},
+      {en:'warm',fr:'chaud (doux)',ex:'A warm welcome.'},
+      {en:'cool',fr:'frais / sympa',ex:'That\'s a cool idea!'},
+      {en:'fast',fr:'rapide',ex:'The train is very fast.'},
+      {en:'slow',fr:'lent',ex:'The internet is slow.'},
+      {en:'easy',fr:'facile',ex:'English is easy!'},
+      {en:'hard',fr:'difficile / dur',ex:'This is a hard question.'},
+      {en:'long',fr:'long',ex:'It\'s a long journey.'},
+      {en:'short',fr:'court / petit',ex:'A short break.'},
+      {en:'high',fr:'haut',ex:'High mountains.'},
+      {en:'low',fr:'bas',ex:'Low prices!'},
+      {en:'right',fr:'correct / droit',ex:'That\'s the right answer.'},
+      {en:'wrong',fr:'mauvais / faux',ex:'That\'s the wrong answer.'},
+      {en:'important',fr:'important',ex:'This is very important.'},
+      {en:'different',fr:'différent',ex:'We have different opinions.'},
+      {en:'same',fr:'même',ex:'We live in the same street.'},
+      {en:'free',fr:'libre / gratuit',ex:'Admission is free.'},
+      {en:'busy',fr:'occupé',ex:'I\'m very busy today.'},
+      {en:'ready',fr:'prêt',ex:'Are you ready?'},
+      {en:'open',fr:'ouvert',ex:'The shop is open.'},
+      {en:'closed',fr:'fermé',ex:'The bank is closed.'},
+      {en:'full',fr:'plein',ex:'The bus is full.'},
+      {en:'empty',fr:'vide',ex:'The glass is empty.'},
+      {en:'clean',fr:'propre',ex:'Keep your room clean.'},
+      {en:'dirty',fr:'sale',ex:'My hands are dirty.'},
+      {en:'happy',fr:'heureux',ex:'I\'m so happy today!'},
+      {en:'sad',fr:'triste',ex:'She looks sad.'},
+      {en:'angry',fr:'en colère',ex:'He is angry.'},
+      {en:'tired',fr:'fatigué',ex:'I\'m very tired.'},
+      {en:'hungry',fr:'affamé',ex:'I\'m hungry!'},
+      {en:'thirsty',fr:'assoiffé',ex:'Are you thirsty?'},
+      {en:'sick',fr:'malade',ex:'I feel sick today.'},
+      {en:'healthy',fr:'en bonne santé',ex:'Stay healthy!'},
+      {en:'beautiful',fr:'beau / belle',ex:'What a beautiful day!'},
+      {en:'ugly',fr:'laid',ex:'That\'s an ugly colour.'},
+      {en:'nice',fr:'sympa / agréable',ex:'You\'re very nice.'},
+      {en:'kind',fr:'gentil',ex:'She\'s so kind.'},
+      {en:'funny',fr:'drôle',ex:'He\'s very funny.'},
+      {en:'serious',fr:'sérieux',ex:'This is serious.'},
+      {en:'quiet',fr:'calme / silencieux',ex:'Please be quiet!'},
+      {en:'loud',fr:'bruyant',ex:'The music is too loud.'},
+      {en:'safe',fr:'sûr / en sécurité',ex:'Is it safe here?'},
+      {en:'dangerous',fr:'dangereux',ex:'Be careful, it\'s dangerous.'},
+      {en:'expensive',fr:'cher',ex:'This watch is expensive.'},
+      {en:'cheap',fr:'bon marché',ex:'It\'s very cheap!'},
+      {en:'rich',fr:'riche',ex:'A rich neighbourhood.'},
+      {en:'poor',fr:'pauvre',ex:'Help poor people.'},
+      {en:'strong',fr:'fort',ex:'She\'s very strong.'},
+      {en:'weak',fr:'faible',ex:'I feel weak today.'},
+      {en:'possible',fr:'possible',ex:'Is it possible?'},
+      {en:'impossible',fr:'impossible',ex:'Nothing is impossible.'},
+      {en:'interesting',fr:'intéressant',ex:'What an interesting book!'},
+      {en:'boring',fr:'ennuyeux',ex:'This film is boring.'},
+      {en:'clever',fr:'intelligent',ex:'She\'s very clever.'},
+    ]
+  },
+  {
+    id: 'colors',
+    name: 'Couleurs',
+    emoji: '🎨',
+    words: [
+      {en:'red',fr:'rouge',ex:'I love red roses.'},
+      {en:'blue',fr:'bleu',ex:'The sky is blue.'},
+      {en:'green',fr:'vert',ex:'Fresh green leaves.'},
+      {en:'yellow',fr:'jaune',ex:'Bananas are yellow.'},
+      {en:'orange',fr:'orange',ex:'An orange sunset.'},
+      {en:'purple',fr:'violet / mauve',ex:'Purple is my favourite.'},
+      {en:'pink',fr:'rose',ex:'Pink flowers.'},
+      {en:'brown',fr:'marron',ex:'Brown leather shoes.'},
+      {en:'black',fr:'noir',ex:'A black cat.'},
+      {en:'white',fr:'blanc',ex:'White snow.'},
+      {en:'grey',fr:'gris',ex:'A grey sky.'},
+      {en:'gold',fr:'doré / or',ex:'Gold earrings.'},
+      {en:'silver',fr:'argenté / argent',ex:'Silver rings.'},
+      {en:'dark',fr:'sombre / foncé',ex:'Dark blue jacket.'},
+      {en:'light',fr:'clair / léger',ex:'Light green walls.'},
+    ]
+  },
+  {
+    id: 'body',
+    name: 'Corps Humain',
+    emoji: '🧍',
+    words: [
+      {en:'head',fr:'tête',ex:'My head hurts.'},
+      {en:'face',fr:'visage',ex:'Wash your face.'},
+      {en:'hair',fr:'cheveux',ex:'She has long hair.'},
+      {en:'eye',fr:'oeil',ex:'She has blue eyes.'},
+      {en:'ear',fr:'oreille',ex:'My ear hurts.'},
+      {en:'nose',fr:'nez',ex:'A cold nose.'},
+      {en:'mouth',fr:'bouche',ex:'Open your mouth.'},
+      {en:'tooth',fr:'dent',ex:'Brush your teeth.'},
+      {en:'tongue',fr:'langue',ex:'Touch your tongue.'},
+      {en:'neck',fr:'cou',ex:'A scarf for your neck.'},
+      {en:'shoulder',fr:'épaule',ex:'Shoulder pain.'},
+      {en:'arm',fr:'bras',ex:'Raise your arm.'},
+      {en:'hand',fr:'main',ex:'Wash your hands.'},
+      {en:'finger',fr:'doigt',ex:'Which finger?'},
+      {en:'chest',fr:'poitrine',ex:'Chest pain.'},
+      {en:'back',fr:'dos',ex:'My back hurts.'},
+      {en:'stomach',fr:'ventre / estomac',ex:'Stomach ache.'},
+      {en:'leg',fr:'jambe',ex:'My legs are tired.'},
+      {en:'knee',fr:'genou',ex:'Knee injury.'},
+      {en:'foot',fr:'pied',ex:'My feet hurt.'},
+      {en:'skin',fr:'peau',ex:'Sensitive skin.'},
+      {en:'heart',fr:'coeur',ex:'My heart beats fast.'},
+      {en:'brain',fr:'cerveau',ex:'Use your brain!'},
+      {en:'blood',fr:'sang',ex:'Blood test results.'},
+      {en:'bone',fr:'os',ex:'Strong bones.'},
+      {en:'muscle',fr:'muscle',ex:'Muscle pain.'},
+      {en:'throat',fr:'gorge',ex:'Sore throat.'},
+      {en:'lip',fr:'lèvre',ex:'Chapped lips.'},
+      {en:'chin',fr:'menton',ex:'A sharp chin.'},
+      {en:'forehead',fr:'front',ex:'A high forehead.'},
+    ]
+  },
+  {
+    id: 'food',
+    name: 'Nourriture & Boissons',
+    emoji: '🍎',
+    words: [
+      {en:'water',fr:'eau',ex:'A glass of water.'},
+      {en:'food',fr:'nourriture',ex:'The food is delicious.'},
+      {en:'bread',fr:'pain',ex:'Fresh bread.'},
+      {en:'rice',fr:'riz',ex:'Rice with vegetables.'},
+      {en:'meat',fr:'viande',ex:'I don\'t eat meat.'},
+      {en:'chicken',fr:'poulet',ex:'Grilled chicken.'},
+      {en:'fish',fr:'poisson',ex:'Fresh fish.'},
+      {en:'egg',fr:'oeuf',ex:'Scrambled eggs.'},
+      {en:'cheese',fr:'fromage',ex:'French cheese.'},
+      {en:'milk',fr:'lait',ex:'A glass of milk.'},
+      {en:'butter',fr:'beurre',ex:'Butter on bread.'},
+      {en:'sugar',fr:'sucre',ex:'No sugar, please.'},
+      {en:'salt',fr:'sel',ex:'Pass the salt.'},
+      {en:'oil',fr:'huile',ex:'Olive oil.'},
+      {en:'soup',fr:'soupe',ex:'Warm soup.'},
+      {en:'salad',fr:'salade',ex:'A green salad.'},
+      {en:'pasta',fr:'pâtes',ex:'Pasta with tomato sauce.'},
+      {en:'potato',fr:'pomme de terre',ex:'Mashed potato.'},
+      {en:'carrot',fr:'carotte',ex:'Fresh carrots.'},
+      {en:'tomato',fr:'tomate',ex:'Tomato salad.'},
+      {en:'onion',fr:'oignon',ex:'Fried onions.'},
+      {en:'garlic',fr:'ail',ex:'Garlic bread.'},
+      {en:'apple',fr:'pomme',ex:'An apple a day.'},
+      {en:'banana',fr:'banane',ex:'A ripe banana.'},
+      {en:'orange',fr:'orange',ex:'Fresh orange juice.'},
+      {en:'lemon',fr:'citron',ex:'Lemon tea.'},
+      {en:'strawberry',fr:'fraise',ex:'Strawberry jam.'},
+      {en:'coffee',fr:'café',ex:'A cup of coffee.'},
+      {en:'tea',fr:'thé',ex:'English tea.'},
+      {en:'juice',fr:'jus',ex:'Apple juice.'},
+      {en:'beer',fr:'bière',ex:'A cold beer.'},
+      {en:'wine',fr:'vin',ex:'Red wine.'},
+      {en:'cake',fr:'gâteau',ex:'Birthday cake!'},
+      {en:'chocolate',fr:'chocolat',ex:'Dark chocolate.'},
+      {en:'ice cream',fr:'glace',ex:'Vanilla ice cream.'},
+      {en:'sandwich',fr:'sandwich',ex:'A cheese sandwich.'},
+      {en:'pizza',fr:'pizza',ex:'Pepperoni pizza.'},
+      {en:'burger',fr:'hamburger',ex:'A veggie burger.'},
+      {en:'breakfast',fr:'petit-déjeuner',ex:'Breakfast at 7 am.'},
+      {en:'lunch',fr:'déjeuner',ex:'Lunch break!'},
+      {en:'dinner',fr:'dîner',ex:'Dinner is ready.'},
+      {en:'meal',fr:'repas',ex:'A healthy meal.'},
+      {en:'menu',fr:'menu',ex:'Can I see the menu?'},
+      {en:'recipe',fr:'recette',ex:'A simple recipe.'},
+      {en:'vegetable',fr:'légume',ex:'Eat your vegetables!'},
+      {en:'fruit',fr:'fruit',ex:'Fresh fruit.'},
+      {en:'snack',fr:'encas',ex:'A healthy snack.'},
+      {en:'dessert',fr:'dessert',ex:'What\'s for dessert?'},
+      {en:'bill',fr:'addition',ex:'The bill, please.'},
+      {en:'restaurant',fr:'restaurant',ex:'A nice restaurant.'},
+    ]
+  },
+  {
+    id: 'family',
+    name: 'Famille & Relations',
+    emoji: '👨‍👩‍👧',
+    words: [
+      {en:'family',fr:'famille',ex:'My family is big.'},
+      {en:'mother',fr:'mère',ex:'My mother is kind.'},
+      {en:'father',fr:'père',ex:'My father works hard.'},
+      {en:'parents',fr:'parents',ex:'My parents live here.'},
+      {en:'sister',fr:'soeur',ex:'My sister is funny.'},
+      {en:'brother',fr:'frère',ex:'My brother plays guitar.'},
+      {en:'son',fr:'fils',ex:'My son is five.'},
+      {en:'daughter',fr:'fille',ex:'My daughter loves reading.'},
+      {en:'husband',fr:'mari',ex:'My husband cooks well.'},
+      {en:'wife',fr:'femme',ex:'My wife is a teacher.'},
+      {en:'baby',fr:'bébé',ex:'The baby is sleeping.'},
+      {en:'child',fr:'enfant',ex:'Every child is unique.'},
+      {en:'grandmother',fr:'grand-mère',ex:'My grandmother tells stories.'},
+      {en:'grandfather',fr:'grand-père',ex:'My grandfather is 80.'},
+      {en:'grandparents',fr:'grands-parents',ex:'Visit your grandparents.'},
+      {en:'aunt',fr:'tante',ex:'My aunt lives in Paris.'},
+      {en:'uncle',fr:'oncle',ex:'Uncle Tom is funny.'},
+      {en:'cousin',fr:'cousin(e)',ex:'My cousin is my best friend.'},
+      {en:'friend',fr:'ami(e)',ex:'She\'s my best friend.'},
+      {en:'neighbour',fr:'voisin(e)',ex:'A friendly neighbour.'},
+      {en:'partner',fr:'partenaire / conjoint',ex:'My partner and I travel.'},
+      {en:'colleague',fr:'collègue',ex:'A helpful colleague.'},
+      {en:'person',fr:'personne',ex:'A nice person.'},
+      {en:'man',fr:'homme',ex:'The man smiled.'},
+      {en:'woman',fr:'femme',ex:'The woman is a doctor.'},
+      {en:'boy',fr:'garçon',ex:'A young boy.'},
+      {en:'girl',fr:'fille',ex:'A smart girl.'},
+      {en:'people',fr:'gens / personnes',ex:'Many people were there.'},
+      {en:'adult',fr:'adulte',ex:'Adults only.'},
+      {en:'teenager',fr:'adolescent',ex:'Teenagers love music.'},
+    ]
+  },
+  {
+    id: 'house',
+    name: 'Maison & Mobilier',
+    emoji: '🏠',
+    words: [
+      {en:'house',fr:'maison',ex:'A beautiful house.'},
+      {en:'home',fr:'chez soi / foyer',ex:'Home is where the heart is.'},
+      {en:'flat',fr:'appartement',ex:'A flat in the city.'},
+      {en:'room',fr:'pièce / chambre',ex:'My room is small.'},
+      {en:'bedroom',fr:'chambre',ex:'A cosy bedroom.'},
+      {en:'bathroom',fr:'salle de bain',ex:'The bathroom is clean.'},
+      {en:'kitchen',fr:'cuisine',ex:'Cook in the kitchen.'},
+      {en:'living room',fr:'salon',ex:'Relax in the living room.'},
+      {en:'garden',fr:'jardin',ex:'A lovely garden.'},
+      {en:'door',fr:'porte',ex:'Close the door.'},
+      {en:'window',fr:'fenêtre',ex:'Open the window.'},
+      {en:'wall',fr:'mur',ex:'Paint the wall.'},
+      {en:'floor',fr:'sol / plancher',ex:'Clean the floor.'},
+      {en:'ceiling',fr:'plafond',ex:'High ceiling.'},
+      {en:'stairs',fr:'escaliers',ex:'Take the stairs.'},
+      {en:'roof',fr:'toit',ex:'A red roof.'},
+      {en:'table',fr:'table',ex:'Sit at the table.'},
+      {en:'chair',fr:'chaise',ex:'A comfortable chair.'},
+      {en:'bed',fr:'lit',ex:'Go to bed.'},
+      {en:'sofa',fr:'canapé',ex:'Sit on the sofa.'},
+      {en:'desk',fr:'bureau',ex:'A tidy desk.'},
+      {en:'wardrobe',fr:'armoire',ex:'A big wardrobe.'},
+      {en:'shelf',fr:'étagère',ex:'Books on the shelf.'},
+      {en:'lamp',fr:'lampe',ex:'Turn on the lamp.'},
+      {en:'mirror',fr:'miroir',ex:'Look in the mirror.'},
+      {en:'curtain',fr:'rideau',ex:'Open the curtains.'},
+      {en:'carpet',fr:'tapis',ex:'A soft carpet.'},
+      {en:'key',fr:'clé',ex:'Where is my key?'},
+      {en:'lock',fr:'serrure / cadenas',ex:'Lock the door.'},
+      {en:'rubbish',fr:'poubelle / ordures',ex:'Take out the rubbish.'},
+      {en:'electricity',fr:'électricité',ex:'Turn off the electricity.'},
+      {en:'heating',fr:'chauffage',ex:'Turn on the heating.'},
+      {en:'internet',fr:'internet',ex:'Fast internet connection.'},
+      {en:'telephone',fr:'téléphone',ex:'Answer the telephone.'},
+      {en:'television',fr:'télévision',ex:'Watch television.'},
+      {en:'computer',fr:'ordinateur',ex:'Use the computer.'},
+    ]
+  },
+  {
+    id: 'travel',
+    name: 'Voyages & Transports',
+    emoji: '✈️',
+    words: [
+      {en:'airport',fr:'aéroport',ex:'We\'re at the airport.'},
+      {en:'station',fr:'gare',ex:'The station is near.'},
+      {en:'train',fr:'train',ex:'Take the train.'},
+      {en:'bus',fr:'bus',ex:'The bus is late.'},
+      {en:'car',fr:'voiture',ex:'Drive a car.'},
+      {en:'taxi',fr:'taxi',ex:'Call a taxi.'},
+      {en:'plane',fr:'avion',ex:'Board the plane.'},
+      {en:'ticket',fr:'billet',ex:'Buy a ticket.'},
+      {en:'passport',fr:'passeport',ex:'Show your passport.'},
+      {en:'hotel',fr:'hôtel',ex:'Book a hotel.'},
+      {en:'room',fr:'chambre',ex:'A double room.'},
+      {en:'map',fr:'carte / plan',ex:'Use a map.'},
+      {en:'road',fr:'route',ex:'On the road.'},
+      {en:'street',fr:'rue',ex:'Turn left at the street.'},
+      {en:'city',fr:'ville',ex:'A big city.'},
+      {en:'town',fr:'ville (petite)',ex:'A quiet town.'},
+      {en:'village',fr:'village',ex:'A small village.'},
+      {en:'country',fr:'pays',ex:'Which country?'},
+      {en:'beach',fr:'plage',ex:'Relax at the beach.'},
+      {en:'mountain',fr:'montagne',ex:'Climb the mountain.'},
+      {en:'sea',fr:'mer',ex:'The sea is calm.'},
+      {en:'river',fr:'rivière / fleuve',ex:'Swim in the river.'},
+      {en:'lake',fr:'lac',ex:'A peaceful lake.'},
+      {en:'forest',fr:'forêt',ex:'Walk in the forest.'},
+      {en:'museum',fr:'musée',ex:'Visit the museum.'},
+      {en:'restaurant',fr:'restaurant',ex:'A great restaurant.'},
+      {en:'shop',fr:'magasin',ex:'A local shop.'},
+      {en:'market',fr:'marché',ex:'A fruit market.'},
+      {en:'hospital',fr:'hôpital',ex:'Near the hospital.'},
+      {en:'school',fr:'école',ex:'Walk to school.'},
+      {en:'office',fr:'bureau',ex:'Work in the office.'},
+      {en:'bank',fr:'banque',ex:'Go to the bank.'},
+      {en:'pharmacy',fr:'pharmacie',ex:'Find a pharmacy.'},
+      {en:'left',fr:'gauche',ex:'Turn left.'},
+      {en:'right',fr:'droite',ex:'Turn right.'},
+      {en:'straight',fr:'tout droit',ex:'Go straight ahead.'},
+      {en:'near',fr:'près',ex:'It\'s very near.'},
+      {en:'far',fr:'loin',ex:'Too far to walk.'},
+      {en:'north',fr:'nord',ex:'Drive north.'},
+      {en:'south',fr:'sud',ex:'The south of France.'},
+      {en:'east',fr:'est',ex:'The east coast.'},
+      {en:'west',fr:'ouest',ex:'Head west.'},
+      {en:'journey',fr:'voyage',ex:'A long journey.'},
+      {en:'trip',fr:'excursion / voyage',ex:'A business trip.'},
+      {en:'holiday',fr:'vacances',ex:'Enjoy your holiday!'},
+      {en:'luggage',fr:'bagages',ex:'Check your luggage.'},
+      {en:'suitcase',fr:'valise',ex:'Pack your suitcase.'},
+      {en:'bridge',fr:'pont',ex:'Cross the bridge.'},
+      {en:'park',fr:'parc',ex:'A walk in the park.'},
+      {en:'square',fr:'place',ex:'Meet at the square.'},
+    ]
+  },
+  {
+    id: 'clothes',
+    name: 'Vêtements & Mode',
+    emoji: '👗',
+    words: [
+      {en:'clothes',fr:'vêtements',ex:'New clothes.'},
+      {en:'shirt',fr:'chemise',ex:'A white shirt.'},
+      {en:'trousers',fr:'pantalon',ex:'Black trousers.'},
+      {en:'jeans',fr:'jeans',ex:'Comfortable jeans.'},
+      {en:'dress',fr:'robe',ex:'A summer dress.'},
+      {en:'skirt',fr:'jupe',ex:'A short skirt.'},
+      {en:'jacket',fr:'veste',ex:'A warm jacket.'},
+      {en:'coat',fr:'manteau',ex:'A winter coat.'},
+      {en:'shoes',fr:'chaussures',ex:'New shoes.'},
+      {en:'boots',fr:'bottes',ex:'Leather boots.'},
+      {en:'socks',fr:'chaussettes',ex:'Clean socks.'},
+      {en:'hat',fr:'chapeau',ex:'A summer hat.'},
+      {en:'scarf',fr:'écharpe',ex:'A wool scarf.'},
+      {en:'gloves',fr:'gants',ex:'Warm gloves.'},
+      {en:'bag',fr:'sac',ex:'A handbag.'},
+      {en:'glasses',fr:'lunettes',ex:'Reading glasses.'},
+      {en:'ring',fr:'bague',ex:'An engagement ring.'},
+      {en:'watch',fr:'montre',ex:'A gold watch.'},
+      {en:'size',fr:'taille',ex:'What size are you?'},
+      {en:'colour',fr:'couleur',ex:'What colour?'},
+      {en:'wear',fr:'porter',ex:'What will you wear?'},
+      {en:'try on',fr:'essayer (vêtement)',ex:'Can I try this on?'},
+      {en:'fit',fr:'aller (taille)',ex:'Does it fit?'},
+      {en:'fashion',fr:'mode',ex:'Follow the fashion.'},
+      {en:'style',fr:'style',ex:'Personal style.'},
+    ]
+  },
+  {
+    id: 'nature',
+    name: 'Nature & Météo',
+    emoji: '🌿',
+    words: [
+      {en:'sun',fr:'soleil',ex:'The sun is shining.'},
+      {en:'moon',fr:'lune',ex:'A full moon.'},
+      {en:'star',fr:'étoile',ex:'Count the stars.'},
+      {en:'sky',fr:'ciel',ex:'A blue sky.'},
+      {en:'cloud',fr:'nuage',ex:'Dark clouds.'},
+      {en:'rain',fr:'pluie',ex:'It\'s raining.'},
+      {en:'snow',fr:'neige',ex:'Snow in winter.'},
+      {en:'wind',fr:'vent',ex:'Strong wind.'},
+      {en:'storm',fr:'tempête',ex:'A bad storm.'},
+      {en:'weather',fr:'temps (météo)',ex:'What\'s the weather like?'},
+      {en:'temperature',fr:'température',ex:'The temperature drops.'},
+      {en:'season',fr:'saison',ex:'My favourite season.'},
+      {en:'spring',fr:'printemps',ex:'Spring flowers.'},
+      {en:'summer',fr:'été',ex:'Hot summer days.'},
+      {en:'autumn',fr:'automne',ex:'Autumn leaves.'},
+      {en:'winter',fr:'hiver',ex:'Cold winter nights.'},
+      {en:'earth',fr:'terre',ex:'Planet Earth.'},
+      {en:'ocean',fr:'océan',ex:'The Pacific Ocean.'},
+      {en:'air',fr:'air',ex:'Fresh air.'},
+      {en:'fire',fr:'feu',ex:'A camp fire.'},
+      {en:'water',fr:'eau',ex:'Clean water.'},
+      {en:'tree',fr:'arbre',ex:'A tall tree.'},
+      {en:'flower',fr:'fleur',ex:'A red flower.'},
+      {en:'grass',fr:'herbe',ex:'Green grass.'},
+      {en:'leaf',fr:'feuille',ex:'A green leaf.'},
+      {en:'animal',fr:'animal',ex:'A wild animal.'},
+      {en:'dog',fr:'chien',ex:'A friendly dog.'},
+      {en:'cat',fr:'chat',ex:'A lazy cat.'},
+      {en:'bird',fr:'oiseau',ex:'A singing bird.'},
+      {en:'fish',fr:'poisson',ex:'Tropical fish.'},
+      {en:'horse',fr:'cheval',ex:'Ride a horse.'},
+      {en:'cow',fr:'vache',ex:'A dairy cow.'},
+      {en:'sheep',fr:'mouton',ex:'White sheep.'},
+      {en:'pig',fr:'cochon',ex:'A pink pig.'},
+    ]
+  },
+  {
+    id: 'health',
+    name: 'Santé & Médecine',
+    emoji: '🏥',
+    words: [
+      {en:'health',fr:'santé',ex:'Good health!'},
+      {en:'doctor',fr:'médecin',ex:'See a doctor.'},
+      {en:'hospital',fr:'hôpital',ex:'Go to hospital.'},
+      {en:'medicine',fr:'médicament',ex:'Take your medicine.'},
+      {en:'pain',fr:'douleur',ex:'I have pain.'},
+      {en:'headache',fr:'mal de tête',ex:'I have a headache.'},
+      {en:'fever',fr:'fièvre',ex:'High fever.'},
+      {en:'cold',fr:'rhume',ex:'I have a cold.'},
+      {en:'cough',fr:'toux',ex:'A bad cough.'},
+      {en:'allergy',fr:'allergie',ex:'Nut allergy.'},
+      {en:'emergency',fr:'urgence',ex:'It\'s an emergency!'},
+      {en:'ambulance',fr:'ambulance',ex:'Call an ambulance!'},
+      {en:'prescription',fr:'ordonnance',ex:'A prescription.'},
+      {en:'pharmacy',fr:'pharmacie',ex:'Go to the pharmacy.'},
+      {en:'surgery',fr:'chirurgie',ex:'Heart surgery.'},
+      {en:'blood pressure',fr:'tension artérielle',ex:'High blood pressure.'},
+      {en:'injury',fr:'blessure',ex:'A knee injury.'},
+      {en:'broken',fr:'cassé / fracturé',ex:'A broken arm.'},
+      {en:'rest',fr:'repos',ex:'You need rest.'},
+      {en:'diet',fr:'régime / alimentation',ex:'A healthy diet.'},
+      {en:'sleep',fr:'sommeil / dormir',ex:'Get enough sleep.'},
+      {en:'exercise',fr:'exercice',ex:'Daily exercise helps.'},
+      {en:'stress',fr:'stress',ex:'Reduce your stress.'},
+      {en:'pregnant',fr:'enceinte',ex:'She is pregnant.'},
+      {en:'disabled',fr:'handicapé',ex:'Accessible for disabled.'},
+    ]
+  },
+  {
+    id: 'work',
+    name: 'Travail & Études',
+    emoji: '💼',
+    words: [
+      {en:'work',fr:'travail',ex:'I love my work.'},
+      {en:'job',fr:'emploi',ex:'A new job.'},
+      {en:'office',fr:'bureau',ex:'Work from the office.'},
+      {en:'meeting',fr:'réunion',ex:'A team meeting.'},
+      {en:'boss',fr:'patron',ex:'My boss is strict.'},
+      {en:'employee',fr:'employé',ex:'A good employee.'},
+      {en:'manager',fr:'responsable',ex:'The project manager.'},
+      {en:'team',fr:'équipe',ex:'A great team.'},
+      {en:'project',fr:'projet',ex:'A new project.'},
+      {en:'deadline',fr:'délai / date limite',ex:'The deadline is Friday.'},
+      {en:'salary',fr:'salaire',ex:'A fair salary.'},
+      {en:'interview',fr:'entretien',ex:'A job interview.'},
+      {en:'email',fr:'e-mail',ex:'Send an email.'},
+      {en:'phone',fr:'téléphone',ex:'Answer the phone.'},
+      {en:'computer',fr:'ordinateur',ex:'Use a computer.'},
+      {en:'school',fr:'école',ex:'Go to school.'},
+      {en:'university',fr:'université',ex:'Study at university.'},
+      {en:'student',fr:'étudiant',ex:'A hardworking student.'},
+      {en:'teacher',fr:'professeur',ex:'My English teacher.'},
+      {en:'lesson',fr:'cours / leçon',ex:'English lesson today.'},
+      {en:'homework',fr:'devoir (maison)',ex:'Do your homework.'},
+      {en:'exam',fr:'examen',ex:'Pass the exam.'},
+      {en:'class',fr:'classe',ex:'A small class.'},
+      {en:'book',fr:'livre',ex:'Read the book.'},
+      {en:'notebook',fr:'cahier',ex:'Write in your notebook.'},
+      {en:'pen',fr:'stylo',ex:'Lend me a pen.'},
+      {en:'paper',fr:'papier',ex:'A sheet of paper.'},
+      {en:'subject',fr:'matière',ex:'My favourite subject.'},
+      {en:'question',fr:'question',ex:'Ask a question.'},
+      {en:'answer',fr:'réponse',ex:'The right answer.'},
+    ]
+  },
+  {
+    id: 'prepositions',
+    name: 'Prépositions & Mots de Liaison',
+    emoji: '🔗',
+    words: [
+      {en:'and',fr:'et',ex:'Bread and butter.'},
+      {en:'or',fr:'ou',ex:'Tea or coffee?'},
+      {en:'but',fr:'mais',ex:'Small but strong.'},
+      {en:'because',fr:'parce que',ex:'I\'m late because of the bus.'},
+      {en:'so',fr:'donc / alors',ex:'It\'s cold, so wear a coat.'},
+      {en:'if',fr:'si',ex:'If you need help, call me.'},
+      {en:'when',fr:'quand',ex:'Call me when you arrive.'},
+      {en:'while',fr:'pendant que',ex:'Read while waiting.'},
+      {en:'although',fr:'bien que',ex:'Although it\'s cold, she swims.'},
+      {en:'however',fr:'cependant',ex:'However, it\'s possible.'},
+      {en:'in',fr:'dans / en',ex:'In the bag.'},
+      {en:'on',fr:'sur',ex:'On the table.'},
+      {en:'at',fr:'à / chez',ex:'At home.'},
+      {en:'to',fr:'à / vers',ex:'Go to school.'},
+      {en:'from',fr:'de / depuis',ex:'From Paris.'},
+      {en:'with',fr:'avec',ex:'With my family.'},
+      {en:'without',fr:'sans',ex:'Coffee without sugar.'},
+      {en:'for',fr:'pour',ex:'For you!'},
+      {en:'of',fr:'de',ex:'A cup of tea.'},
+      {en:'about',fr:'à propos de',ex:'Talk about it.'},
+      {en:'by',fr:'par',ex:'By bus.'},
+      {en:'between',fr:'entre',ex:'Between you and me.'},
+      {en:'under',fr:'sous',ex:'Under the bed.'},
+      {en:'above',fr:'au-dessus',ex:'Above the clouds.'},
+      {en:'through',fr:'à travers',ex:'Walk through the park.'},
+      {en:'during',fr:'pendant',ex:'During the meeting.'},
+      {en:'until',fr:'jusqu\'à',ex:'Until tomorrow.'},
+      {en:'since',fr:'depuis',ex:'Since Monday.'},
+      {en:'across',fr:'en face / à travers',ex:'Across the street.'},
+      {en:'behind',fr:'derrière',ex:'Behind the door.'},
+    ]
+  }
+];
+
+function buildTabs() {
+  const tabsEl = document.getElementById('filterTabs');
+  categories.forEach(cat => {
+    const t = document.createElement('span');
+    t.className = 'tab';
+    t.dataset.cat = cat.id;
+    t.textContent = cat.emoji + ' ' + cat.name;
+    tabsEl.appendChild(t);
+  });
+  tabsEl.addEventListener('click', e => {
+    if (!e.target.classList.contains('tab')) return;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    e.target.classList.add('active');
+    filterByCategory(e.target.dataset.cat);
+  });
+}
+
+function buildContent() {
+  const main = document.getElementById('mainContent');
+  categories.forEach(cat => {
+    const sec = document.createElement('div');
+    sec.className = `category-section cat-${cat.id}`;
+    sec.dataset.catId = cat.id;
+    const hdr = document.createElement('div');
+    hdr.className = 'category-header';
+    hdr.innerHTML = `<span class="cat-emoji">${cat.emoji}</span><h2>${cat.name}</h2><span class="word-count">${cat.words.length} mots</span>`;
+    const grid = document.createElement('div');
+    grid.className = 'words-grid';
+    cat.words.forEach(w => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+      card.dataset.en = w.en.toLowerCase();
+      card.dataset.fr = w.fr.toLowerCase();
+      card.innerHTML = `<div class="word-english">${w.en}</div><div class="word-french">${w.fr}</div><div class="word-example">${w.ex}</div>`;
+      grid.appendChild(card);
+    });
+    sec.appendChild(hdr);
+    sec.appendChild(grid);
+    main.appendChild(sec);
+  });
+}
+
+function filterByCategory(cat) {
+  document.querySelectorAll('.category-section').forEach(sec => {
+    sec.classList.toggle('hidden', cat !== 'all' && sec.dataset.catId !== cat);
+  });
+  document.getElementById('searchInput').value = '';
+}
+
+function setupSearch() {
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.tab[data-cat="all"]').classList.add('active');
+    document.querySelectorAll('.category-section').forEach(sec => sec.classList.remove('hidden'));
+    if (!q) {
+      document.querySelectorAll('.word-card').forEach(c => c.classList.remove('hidden'));
+      return;
+    }
+    document.querySelectorAll('.word-card').forEach(card => {
+      const match = card.dataset.en.includes(q) || card.dataset.fr.includes(q);
+      card.classList.toggle('hidden', !match);
+    });
+    document.querySelectorAll('.category-section').forEach(sec => {
+      const visible = sec.querySelectorAll('.word-card:not(.hidden)').length > 0;
+      sec.classList.toggle('hidden', !visible);
+    });
+  });
+}
+
+buildTabs();
+buildContent();
+setupSearch();
+</script>
