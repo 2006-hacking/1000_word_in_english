@@ -1,0 +1,725 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.quiz-wrap { padding: 1.5rem 0 2rem; }
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mode-tabs {
+  display: flex;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+}
+
+.mode-tab {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--color-background-primary);
+  color: var(--color-text-secondary);
+  border: none;
+  transition: all 0.15s;
+}
+
+.mode-tab.active {
+  background: #1C1C2E;
+  color: #fff;
+}
+
+.cat-select {
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+}
+
+.score-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.score-pill {
+  font-size: 13px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.pill-good { background: #E8FBED; color: #1e6e2e; }
+.pill-bad  { background: #FFE8EA; color: #991420; }
+.pill-left { background: #EBF0FF; color: #1a3fa8; }
+
+.progress-bar {
+  height: 4px;
+  background: var(--color-background-secondary);
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #1C1C2E;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.card-area { min-height: 220px; margin-bottom: 1.2rem; }
+
+.flashcard {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.1s;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.flashcard:active { transform: scale(0.99); }
+
+.card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+}
+
+.card-word {
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.card-sub {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.card-example {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-text-tertiary);
+  border-left: 2px solid #1C1C2E;
+  padding-left: 10px;
+  text-align: left;
+  max-width: 340px;
+}
+
+.flip-hint {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.flash-btns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.btn-know {
+  padding: 9px 24px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid #1e6e2e;
+  background: #E8FBED;
+  color: #1e6e2e;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-know:hover { background: #c5f0d5; }
+
+.btn-learn {
+  padding: 9px 24px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid #991420;
+  background: #FFE8EA;
+  color: #991420;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-learn:hover { background: #ffc8cc; }
+
+.btn-next {
+  padding: 9px 24px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-next:hover { background: var(--color-background-secondary); }
+
+.btn-primary {
+  padding: 9px 24px;
+  border-radius: var(--border-radius-md);
+  border: none;
+  background: #1C1C2E;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-primary:hover { opacity: 0.85; }
+
+.qcm-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.qcm-opt {
+  padding: 14px 16px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.qcm-opt:hover:not(.disabled) { background: var(--color-background-secondary); }
+.qcm-opt.correct { background: #E8FBED; color: #1e6e2e; border-color: #5CC76E; }
+.qcm-opt.wrong   { background: #FFE8EA; color: #991420; border-color: #E8525A; }
+.qcm-opt.disabled { cursor: default; }
+
+.typing-area { margin-bottom: 1rem; }
+.typing-area input {
+  width: 100%;
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+}
+.typing-feedback {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+  min-height: 22px;
+}
+
+.end-screen {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.end-score {
+  font-size: 3rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 1rem 0 0.5rem;
+}
+
+.end-label {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.end-stars {
+  font-size: 1.8rem;
+  letter-spacing: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.hidden { display: none !important; }
+</style>
+
+<div class="quiz-wrap">
+
+<div class="top-bar">
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('flash')">Flashcards</button>
+    <button class="mode-tab" onclick="setMode('qcm')">QCM</button>
+    <button class="mode-tab" onclick="setMode('type')">Orthographe</button>
+  </div>
+  <select class="cat-select" id="catSelect" onchange="restart()">
+    <option value="all">Toutes les catégories</option>
+    <option value="greetings">Salutations</option>
+    <option value="verbs">Verbes</option>
+    <option value="adj">Adjectifs</option>
+    <option value="food">Nourriture</option>
+    <option value="travel">Voyages</option>
+    <option value="numbers">Nombres</option>
+    <option value="time">Temps</option>
+    <option value="family">Famille</option>
+    <option value="colors">Couleurs</option>
+    <option value="body">Corps</option>
+    <option value="nature">Nature</option>
+    <option value="house">Maison</option>
+    <option value="clothes">Vêtements</option>
+    <option value="health">Santé</option>
+    <option value="work">Travail</option>
+    <option value="question">Questions</option>
+    <option value="prepositions">Prépositions</option>
+  </select>
+</div>
+
+<div class="score-row">
+  <span class="score-pill pill-good" id="scoreGood">Correct : 0</span>
+  <span class="score-pill pill-bad"  id="scoreBad">À revoir : 0</span>
+  <span class="score-pill pill-left" id="scoreLeft">Restants : 20</span>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+
+<div id="mainArea"></div>
+
+<div id="endScreen" class="end-screen hidden">
+  <div style="font-size:14px;color:var(--color-text-secondary);">Résultat final</div>
+  <div class="end-score" id="endScore">0 / 20</div>
+  <div class="end-stars" id="endStars">☆☆☆☆☆</div>
+  <div class="end-label" id="endLabel">Bravo !</div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <button class="btn-primary" onclick="restart()">Rejouer</button>
+    <button class="btn-next" onclick="restart('wrong')">Revoir les erreurs</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const ALL_WORDS = [
+  {cat:'greetings',en:'hello',fr:'bonjour',ex:'Hello! How are you?'},
+  {cat:'greetings',en:'goodbye',fr:'au revoir',ex:'Goodbye! See you tomorrow.'},
+  {cat:'greetings',en:'please',fr:'s\'il vous plaît',ex:'Can I have water, please?'},
+  {cat:'greetings',en:'thank you',fr:'merci',ex:'Thank you very much!'},
+  {cat:'greetings',en:'sorry',fr:'désolé',ex:'I\'m sorry for being late.'},
+  {cat:'greetings',en:'welcome',fr:'bienvenue',ex:'Welcome to our home!'},
+  {cat:'greetings',en:'yes',fr:'oui',ex:'Yes, I understand.'},
+  {cat:'greetings',en:'no',fr:'non',ex:'No, thank you.'},
+  {cat:'greetings',en:'maybe',fr:'peut-être',ex:'Maybe we can meet tomorrow.'},
+  {cat:'greetings',en:'congratulations',fr:'félicitations',ex:'Congratulations on your new job!'},
+  {cat:'question',en:'who',fr:'qui',ex:'Who is your teacher?'},
+  {cat:'question',en:'what',fr:'quoi / que',ex:'What is your name?'},
+  {cat:'question',en:'where',fr:'où',ex:'Where do you live?'},
+  {cat:'question',en:'when',fr:'quand',ex:'When is the meeting?'},
+  {cat:'question',en:'why',fr:'pourquoi',ex:'Why are you sad?'},
+  {cat:'question',en:'how',fr:'comment',ex:'How do you say that?'},
+  {cat:'question',en:'which',fr:'lequel / quel',ex:'Which colour do you prefer?'},
+  {cat:'question',en:'how much',fr:'combien (indénombrable)',ex:'How much does it cost?'},
+  {cat:'question',en:'how many',fr:'combien (dénombrable)',ex:'How many apples do you want?'},
+  {cat:'question',en:'how old',fr:'quel âge',ex:'How old are you?'},
+  {cat:'numbers',en:'one',fr:'un',ex:'I have one brother.'},
+  {cat:'numbers',en:'two',fr:'deux',ex:'Two coffees, please.'},
+  {cat:'numbers',en:'three',fr:'trois',ex:'She has three cats.'},
+  {cat:'numbers',en:'ten',fr:'dix',ex:'I\'ll be there in ten minutes.'},
+  {cat:'numbers',en:'twenty',fr:'vingt',ex:'Twenty people came.'},
+  {cat:'numbers',en:'hundred',fr:'cent',ex:'A hundred kilometres away.'},
+  {cat:'numbers',en:'first',fr:'premier',ex:'She finished first.'},
+  {cat:'numbers',en:'last',fr:'dernier',ex:'This is the last bus.'},
+  {cat:'numbers',en:'few',fr:'quelques',ex:'A few friends came.'},
+  {cat:'numbers',en:'enough',fr:'assez',ex:'I have enough money.'},
+  {cat:'time',en:'today',fr:'aujourd\'hui',ex:'What are you doing today?'},
+  {cat:'time',en:'yesterday',fr:'hier',ex:'I was sick yesterday.'},
+  {cat:'time',en:'tomorrow',fr:'demain',ex:'See you tomorrow!'},
+  {cat:'time',en:'now',fr:'maintenant',ex:'I\'m busy now.'},
+  {cat:'time',en:'always',fr:'toujours',ex:'She always smiles.'},
+  {cat:'time',en:'never',fr:'jamais',ex:'I never eat meat.'},
+  {cat:'time',en:'morning',fr:'matin',ex:'I jog every morning.'},
+  {cat:'time',en:'week',fr:'semaine',ex:'Next week is busy.'},
+  {cat:'time',en:'year',fr:'année',ex:'Happy New Year!'},
+  {cat:'time',en:'early',fr:'tôt',ex:'She arrives early.'},
+  {cat:'verbs',en:'be',fr:'être',ex:'I am happy.'},
+  {cat:'verbs',en:'have',fr:'avoir',ex:'I have a dog.'},
+  {cat:'verbs',en:'go',fr:'aller',ex:'Let\'s go to the park.'},
+  {cat:'verbs',en:'make',fr:'faire / créer',ex:'Make a coffee, please.'},
+  {cat:'verbs',en:'know',fr:'savoir / connaître',ex:'Do you know her?'},
+  {cat:'verbs',en:'want',fr:'vouloir',ex:'I want a coffee.'},
+  {cat:'verbs',en:'eat',fr:'manger',ex:'Let\'s eat together.'},
+  {cat:'verbs',en:'drink',fr:'boire',ex:'Drink more water.'},
+  {cat:'verbs',en:'sleep',fr:'dormir',ex:'I need to sleep.'},
+  {cat:'verbs',en:'love',fr:'aimer (fort)',ex:'I love chocolate.'},
+  {cat:'verbs',en:'like',fr:'aimer (modéré)',ex:'I like swimming.'},
+  {cat:'verbs',en:'speak',fr:'parler',ex:'Do you speak French?'},
+  {cat:'verbs',en:'listen',fr:'écouter',ex:'Listen carefully.'},
+  {cat:'verbs',en:'learn',fr:'apprendre',ex:'Learn new words daily.'},
+  {cat:'verbs',en:'help',fr:'aider',ex:'Can you help me?'},
+  {cat:'verbs',en:'work',fr:'travailler',ex:'I work from home.'},
+  {cat:'verbs',en:'buy',fr:'acheter',ex:'I want to buy this.'},
+  {cat:'verbs',en:'read',fr:'lire',ex:'I read every night.'},
+  {cat:'verbs',en:'write',fr:'écrire',ex:'Write your name here.'},
+  {cat:'verbs',en:'travel',fr:'voyager',ex:'I love to travel.'},
+  {cat:'adj',en:'good',fr:'bon / bien',ex:'That\'s a good idea.'},
+  {cat:'adj',en:'bad',fr:'mauvais',ex:'It was a bad decision.'},
+  {cat:'adj',en:'big',fr:'grand',ex:'It\'s a big house.'},
+  {cat:'adj',en:'small',fr:'petit',ex:'A small cup, please.'},
+  {cat:'adj',en:'hot',fr:'chaud',ex:'It\'s hot today.'},
+  {cat:'adj',en:'cold',fr:'froid',ex:'The water is cold.'},
+  {cat:'adj',en:'happy',fr:'heureux',ex:'I\'m so happy today!'},
+  {cat:'adj',en:'sad',fr:'triste',ex:'She looks sad.'},
+  {cat:'adj',en:'tired',fr:'fatigué',ex:'I\'m very tired.'},
+  {cat:'adj',en:'beautiful',fr:'beau / belle',ex:'What a beautiful day!'},
+  {cat:'adj',en:'easy',fr:'facile',ex:'English is easy!'},
+  {cat:'adj',en:'hard',fr:'difficile / dur',ex:'This is a hard question.'},
+  {cat:'adj',en:'fast',fr:'rapide',ex:'The train is very fast.'},
+  {cat:'adj',en:'slow',fr:'lent',ex:'The internet is slow.'},
+  {cat:'adj',en:'free',fr:'libre / gratuit',ex:'Admission is free.'},
+  {cat:'adj',en:'busy',fr:'occupé',ex:'I\'m very busy today.'},
+  {cat:'adj',en:'expensive',fr:'cher',ex:'This watch is expensive.'},
+  {cat:'adj',en:'cheap',fr:'bon marché',ex:'It\'s very cheap!'},
+  {cat:'adj',en:'interesting',fr:'intéressant',ex:'What an interesting book!'},
+  {cat:'adj',en:'funny',fr:'drôle',ex:'He\'s very funny.'},
+  {cat:'colors',en:'red',fr:'rouge',ex:'I love red roses.'},
+  {cat:'colors',en:'blue',fr:'bleu',ex:'The sky is blue.'},
+  {cat:'colors',en:'green',fr:'vert',ex:'Fresh green leaves.'},
+  {cat:'colors',en:'yellow',fr:'jaune',ex:'Bananas are yellow.'},
+  {cat:'colors',en:'orange',fr:'orange',ex:'An orange sunset.'},
+  {cat:'colors',en:'purple',fr:'violet / mauve',ex:'Purple is my favourite.'},
+  {cat:'colors',en:'pink',fr:'rose',ex:'Pink flowers.'},
+  {cat:'colors',en:'black',fr:'noir',ex:'A black cat.'},
+  {cat:'colors',en:'white',fr:'blanc',ex:'White snow.'},
+  {cat:'colors',en:'grey',fr:'gris',ex:'A grey sky.'},
+  {cat:'body',en:'head',fr:'tête',ex:'My head hurts.'},
+  {cat:'body',en:'eye',fr:'oeil',ex:'She has blue eyes.'},
+  {cat:'body',en:'nose',fr:'nez',ex:'A cold nose.'},
+  {cat:'body',en:'mouth',fr:'bouche',ex:'Open your mouth.'},
+  {cat:'body',en:'hand',fr:'main',ex:'Wash your hands.'},
+  {cat:'body',en:'leg',fr:'jambe',ex:'My legs are tired.'},
+  {cat:'body',en:'heart',fr:'coeur',ex:'My heart beats fast.'},
+  {cat:'body',en:'back',fr:'dos',ex:'My back hurts.'},
+  {cat:'body',en:'stomach',fr:'ventre / estomac',ex:'Stomach ache.'},
+  {cat:'body',en:'foot',fr:'pied',ex:'My feet hurt.'},
+  {cat:'food',en:'water',fr:'eau',ex:'A glass of water.'},
+  {cat:'food',en:'bread',fr:'pain',ex:'Fresh bread.'},
+  {cat:'food',en:'meat',fr:'viande',ex:'I don\'t eat meat.'},
+  {cat:'food',en:'egg',fr:'oeuf',ex:'Scrambled eggs.'},
+  {cat:'food',en:'cheese',fr:'fromage',ex:'French cheese.'},
+  {cat:'food',en:'milk',fr:'lait',ex:'A glass of milk.'},
+  {cat:'food',en:'coffee',fr:'café',ex:'A cup of coffee.'},
+  {cat:'food',en:'tea',fr:'thé',ex:'English tea.'},
+  {cat:'food',en:'apple',fr:'pomme',ex:'An apple a day.'},
+  {cat:'food',en:'cake',fr:'gâteau',ex:'Birthday cake!'},
+  {cat:'food',en:'breakfast',fr:'petit-déjeuner',ex:'Breakfast at 7 am.'},
+  {cat:'food',en:'dinner',fr:'dîner',ex:'Dinner is ready.'},
+  {cat:'family',en:'mother',fr:'mère',ex:'My mother is kind.'},
+  {cat:'family',en:'father',fr:'père',ex:'My father works hard.'},
+  {cat:'family',en:'sister',fr:'soeur',ex:'My sister is funny.'},
+  {cat:'family',en:'brother',fr:'frère',ex:'My brother plays guitar.'},
+  {cat:'family',en:'son',fr:'fils',ex:'My son is five.'},
+  {cat:'family',en:'daughter',fr:'fille',ex:'My daughter loves reading.'},
+  {cat:'family',en:'friend',fr:'ami(e)',ex:'She\'s my best friend.'},
+  {cat:'family',en:'baby',fr:'bébé',ex:'The baby is sleeping.'},
+  {cat:'family',en:'child',fr:'enfant',ex:'Every child is unique.'},
+  {cat:'family',en:'husband',fr:'mari',ex:'My husband cooks well.'},
+  {cat:'house',en:'house',fr:'maison',ex:'A beautiful house.'},
+  {cat:'house',en:'door',fr:'porte',ex:'Close the door.'},
+  {cat:'house',en:'window',fr:'fenêtre',ex:'Open the window.'},
+  {cat:'house',en:'kitchen',fr:'cuisine',ex:'Cook in the kitchen.'},
+  {cat:'house',en:'bed',fr:'lit',ex:'Go to bed.'},
+  {cat:'house',en:'table',fr:'table',ex:'Sit at the table.'},
+  {cat:'house',en:'key',fr:'clé',ex:'Where is my key?'},
+  {cat:'house',en:'garden',fr:'jardin',ex:'A lovely garden.'},
+  {cat:'house',en:'computer',fr:'ordinateur',ex:'Use the computer.'},
+  {cat:'house',en:'television',fr:'télévision',ex:'Watch television.'},
+  {cat:'travel',en:'airport',fr:'aéroport',ex:'We\'re at the airport.'},
+  {cat:'travel',en:'train',fr:'train',ex:'Take the train.'},
+  {cat:'travel',en:'bus',fr:'bus',ex:'The bus is late.'},
+  {cat:'travel',en:'ticket',fr:'billet',ex:'Buy a ticket.'},
+  {cat:'travel',en:'hotel',fr:'hôtel',ex:'Book a hotel.'},
+  {cat:'travel',en:'map',fr:'carte / plan',ex:'Use a map.'},
+  {cat:'travel',en:'city',fr:'ville',ex:'A big city.'},
+  {cat:'travel',en:'beach',fr:'plage',ex:'Relax at the beach.'},
+  {cat:'travel',en:'museum',fr:'musée',ex:'Visit the museum.'},
+  {cat:'travel',en:'holiday',fr:'vacances',ex:'Enjoy your holiday!'},
+  {cat:'clothes',en:'shirt',fr:'chemise',ex:'A white shirt.'},
+  {cat:'clothes',en:'shoes',fr:'chaussures',ex:'New shoes.'},
+  {cat:'clothes',en:'jacket',fr:'veste',ex:'A warm jacket.'},
+  {cat:'clothes',en:'hat',fr:'chapeau',ex:'A summer hat.'},
+  {cat:'clothes',en:'dress',fr:'robe',ex:'A summer dress.'},
+  {cat:'clothes',en:'glasses',fr:'lunettes',ex:'Reading glasses.'},
+  {cat:'clothes',en:'watch',fr:'montre',ex:'A gold watch.'},
+  {cat:'clothes',en:'bag',fr:'sac',ex:'A handbag.'},
+  {cat:'clothes',en:'coat',fr:'manteau',ex:'A winter coat.'},
+  {cat:'clothes',en:'scarf',fr:'écharpe',ex:'A wool scarf.'},
+  {cat:'nature',en:'sun',fr:'soleil',ex:'The sun is shining.'},
+  {cat:'nature',en:'rain',fr:'pluie',ex:'It\'s raining.'},
+  {cat:'nature',en:'snow',fr:'neige',ex:'Snow in winter.'},
+  {cat:'nature',en:'tree',fr:'arbre',ex:'A tall tree.'},
+  {cat:'nature',en:'flower',fr:'fleur',ex:'A red flower.'},
+  {cat:'nature',en:'dog',fr:'chien',ex:'A friendly dog.'},
+  {cat:'nature',en:'cat',fr:'chat',ex:'A lazy cat.'},
+  {cat:'nature',en:'bird',fr:'oiseau',ex:'A singing bird.'},
+  {cat:'nature',en:'sea',fr:'mer',ex:'The sea is calm.'},
+  {cat:'nature',en:'mountain',fr:'montagne',ex:'Climb the mountain.'},
+  {cat:'health',en:'pain',fr:'douleur',ex:'I have pain.'},
+  {cat:'health',en:'doctor',fr:'médecin',ex:'See a doctor.'},
+  {cat:'health',en:'medicine',fr:'médicament',ex:'Take your medicine.'},
+  {cat:'health',en:'fever',fr:'fièvre',ex:'High fever.'},
+  {cat:'health',en:'emergency',fr:'urgence',ex:'It\'s an emergency!'},
+  {cat:'health',en:'rest',fr:'repos',ex:'You need rest.'},
+  {cat:'health',en:'sleep',fr:'sommeil',ex:'Get enough sleep.'},
+  {cat:'health',en:'stress',fr:'stress',ex:'Reduce your stress.'},
+  {cat:'work',en:'work',fr:'travail',ex:'I love my work.'},
+  {cat:'work',en:'school',fr:'école',ex:'Go to school.'},
+  {cat:'work',en:'teacher',fr:'professeur',ex:'My English teacher.'},
+  {cat:'work',en:'student',fr:'étudiant',ex:'A hardworking student.'},
+  {cat:'work',en:'exam',fr:'examen',ex:'Pass the exam.'},
+  {cat:'work',en:'book',fr:'livre',ex:'Read the book.'},
+  {cat:'work',en:'email',fr:'e-mail',ex:'Send an email.'},
+  {cat:'prepositions',en:'and',fr:'et',ex:'Bread and butter.'},
+  {cat:'prepositions',en:'or',fr:'ou',ex:'Tea or coffee?'},
+  {cat:'prepositions',en:'but',fr:'mais',ex:'Small but strong.'},
+  {cat:'prepositions',en:'because',fr:'parce que',ex:'I\'m late because of the bus.'},
+  {cat:'prepositions',en:'in',fr:'dans / en',ex:'In the bag.'},
+  {cat:'prepositions',en:'on',fr:'sur',ex:'On the table.'},
+  {cat:'prepositions',en:'with',fr:'avec',ex:'With my family.'},
+  {cat:'prepositions',en:'for',fr:'pour',ex:'For you!'},
+  {cat:'prepositions',en:'under',fr:'sous',ex:'Under the bed.'},
+  {cat:'prepositions',en:'between',fr:'entre',ex:'Between you and me.'},
+];
+
+const QUIZ_SIZE = 20;
+let mode = 'flash';
+let deck = [];
+let wrongWords = [];
+let idx = 0;
+let good = 0;
+let bad = 0;
+let flipped = false;
+let answered = false;
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mode-tab')[['flash','qcm','type'].indexOf(m)].classList.add('active');
+  restart();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function restart(from) {
+  const cat = document.getElementById('catSelect').value;
+  let pool = cat === 'all' ? ALL_WORDS : ALL_WORDS.filter(w => w.cat === cat);
+  if (from === 'wrong' && wrongWords.length > 0) {
+    pool = wrongWords;
+  }
+  deck = shuffle([...pool]).slice(0, Math.min(QUIZ_SIZE, pool.length));
+  wrongWords = [];
+  idx = 0; good = 0; bad = 0; flipped = false; answered = false;
+  document.getElementById('endScreen').classList.add('hidden');
+  document.getElementById('mainArea').classList.remove('hidden');
+  updateScore();
+  render();
+}
+
+function updateScore() {
+  document.getElementById('scoreGood').textContent = 'Correct : ' + good;
+  document.getElementById('scoreBad').textContent  = 'À revoir : ' + bad;
+  document.getElementById('scoreLeft').textContent = 'Restants : ' + (deck.length - idx);
+  const pct = deck.length > 0 ? Math.round((idx / deck.length) * 100) : 0;
+  document.getElementById('progFill').style.width = pct + '%';
+}
+
+function render() {
+  if (idx >= deck.length) { showEnd(); return; }
+  const w = deck[idx];
+  if (mode === 'flash') renderFlash(w);
+  else if (mode === 'qcm') renderQCM(w);
+  else renderType(w);
+}
+
+function renderFlash(w) {
+  flipped = false;
+  document.getElementById('mainArea').innerHTML = `
+    <div class="card-area">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="card-label">anglais</div>
+        <div class="card-word" id="cardWord">${w.en}</div>
+        <div class="card-sub hidden" id="cardFr">${w.fr}</div>
+        <div class="card-example hidden" id="cardEx">${w.ex}</div>
+      </div>
+    </div>
+    <div class="flip-hint" id="flipHint">Cliquer pour révéler la traduction</div>
+    <div class="flash-btns hidden" id="flashBtns">
+      <button class="btn-know" onclick="markFlash(true)">Je connais</button>
+      <button class="btn-learn" onclick="markFlash(false)">À revoir</button>
+    </div>
+  `;
+}
+
+function flipCard() {
+  if (flipped) return;
+  flipped = true;
+  document.getElementById('cardFr').classList.remove('hidden');
+  document.getElementById('cardEx').classList.remove('hidden');
+  document.getElementById('flipHint').textContent = 'Tu connaissais ce mot ?';
+  document.getElementById('flashBtns').classList.remove('hidden');
+}
+
+function markFlash(known) {
+  if (known) good++; else { bad++; wrongWords.push(deck[idx]); }
+  idx++;
+  updateScore();
+  render();
+}
+
+function renderQCM(w) {
+  answered = false;
+  const pool = ALL_WORDS.filter(x => x.en !== w.en);
+  const wrong3 = shuffle([...pool]).slice(0, 3).map(x => x.fr);
+  const options = shuffle([w.fr, ...wrong3]);
+  document.getElementById('mainArea').innerHTML = `
+    <div class="card-area">
+      <div class="flashcard" style="cursor:default;">
+        <div class="card-label">Traduis en français</div>
+        <div class="card-word">${w.en}</div>
+      </div>
+    </div>
+    <div class="qcm-options" id="opts">
+      ${options.map((o,i) => `<button class="qcm-opt" onclick="answerQCM(this,'${o.replace(/'/g,"\\'")}','${w.fr.replace(/'/g,"\\'")}',${i})">${o}</button>`).join('')}
+    </div>
+    <div style="text-align:center;" id="nextBtn" class="hidden">
+      <button class="btn-next" onclick="nextQ()">Suivant</button>
+    </div>
+  `;
+}
+
+function answerQCM(btn, chosen, correct, i) {
+  if (answered) return;
+  answered = true;
+  const opts = document.querySelectorAll('.qcm-opt');
+  opts.forEach(o => o.classList.add('disabled'));
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    good++;
+  } else {
+    btn.classList.add('wrong');
+    opts.forEach(o => { if (o.textContent === correct) o.classList.add('correct'); });
+    bad++;
+    wrongWords.push(deck[idx]);
+  }
+  document.getElementById('nextBtn').classList.remove('hidden');
+  updateScore();
+}
+
+function nextQ() { idx++; updateScore(); render(); }
+
+function renderType(w) {
+  answered = false;
+  document.getElementById('mainArea').innerHTML = `
+    <div class="card-area">
+      <div class="flashcard" style="cursor:default;">
+        <div class="card-label">Écris en anglais</div>
+        <div class="card-word">${w.fr}</div>
+        <div style="font-size:13px;color:var(--color-text-tertiary);margin-top:8px;">Indice : ${w.ex.replace(w.en,'_____')}</div>
+      </div>
+    </div>
+    <div class="typing-area">
+      <input type="text" id="typeInput" placeholder="Tape le mot en anglais..." autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkType('${w.en.replace(/'/g,"\\'")}')">
+      <div class="typing-feedback" id="typeFeedback"></div>
+    </div>
+    <div style="text-align:center;display:flex;gap:10px;justify-content:center;" id="typeBtns">
+      <button class="btn-primary" onclick="checkType('${w.en.replace(/'/g,"\\'")}')">Vérifier</button>
+      <button class="btn-next" onclick="skipType('${w.en.replace(/'/g,"\\'")}')">Passer</button>
+    </div>
+    <div style="text-align:center;margin-top:12px;" id="typeNext" class="hidden">
+      <button class="btn-next" onclick="nextQ()">Suivant</button>
+    </div>
+  `;
+  setTimeout(() => { const el = document.getElementById('typeInput'); if(el) el.focus(); }, 100);
+}
+
+function checkType(correct) {
+  if (answered) return;
+  const input = document.getElementById('typeInput');
+  if (!input) return;
+  const val = input.value.trim().toLowerCase();
+  if (!val) return;
+  answered = true;
+  input.disabled = true;
+  const fb = document.getElementById('typeFeedback');
+  document.getElementById('typeBtns').classList.add('hidden');
+  document.getElementById('typeNext').classList.remove('hidden');
+  if (val === correct.toLowerCase()) {
+    fb.style.color = '#1e6e2e';
+    fb.textContent = 'Parfait ! "' + correct + '"';
+    good++;
+  } else {
+    fb.style.color = '#991420';
+    fb.textContent = 'Pas tout à fait. La bonne réponse : "' + correct + '"';
+    bad++;
+    wrongWords.push(deck[idx]);
+  }
+  updateScore();
+}
+
+function skipType(correct) {
+  if (answered) return;
+  answered = true;
+  const input = document.getElementById('typeInput');
+  if (input) input.disabled = true;
+  const fb = document.getElementById('typeFeedback');
+  fb.style.color = '#555';
+  fb.textContent = 'Réponse : "' + correct + '"';
+  document.getElementById('typeBtns').classList.add('hidden');
+  document.getElementById('typeNext').classList.remove('hidden');
+  bad++;
+  wrongWords.push(deck[idx]);
+  updateScore();
+}
+
+function showEnd() {
+  document.getElementById('mainArea').classList.add('hidden');
+  const end = document.getElementById('endScreen');
+  end.classList.remove('hidden');
+  const total = deck.length;
+  document.getElementById('endScore').textContent = good + ' / ' + total;
+  const pct = total > 0 ? good / total : 0;
+  let stars = '';
+  const full = Math.round(pct * 5);
+  for (let i = 0; i < 5; i++) stars += i < full ? '★' : '☆';
+  document.getElementById('endStars').textContent = stars;
+  const labels = ['Continue d\'essayer !', 'Bon début, continue !', 'Pas mal du tout !', 'Très bien !', 'Excellent !', 'Parfait !'];
+  document.getElementById('endLabel').textContent = labels[full];
+  document.getElementById('progFill').style.width = '100%';
+}
+
+restart();
+</script>
